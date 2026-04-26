@@ -1,18 +1,22 @@
+import { useState } from 'react'
 import {
   Box,
   Flex,
   Heading,
-  Text,
   Badge,
-  VStack,
+  Container,
+  Code,
 } from '@chakra-ui/react'
+import ReceiptUploader from './components/ReceiptUploader'
+import type { Receipt } from './types'
 
 function App() {
+  const [extractedData, setExtractedData] = useState<Partial<Receipt> | null>(null)
+
   return (
     <Box minH="100vh" bg="gray.50">
-      {/* Top Nav */}
-      <Box bg="brand.500" px={6} py={4} shadow="md">
-        <Flex align="center" justify="space-between">
+      <Box bg="teal.600" px={6} py={4} shadow="md">
+        <Flex align="center" justify="space-between" maxW="1200px" mx="auto">
           <Heading size="md" color="white">
             AkauntAI
           </Heading>
@@ -22,25 +26,27 @@ function App() {
         </Flex>
       </Box>
 
-      {/* Body */}
-      <Flex
-        direction="column"
-        align="center"
-        justify="center"
-        minH="calc(100vh - 64px)"
-      >
-        <VStack spacing={4}>
-          <Heading size="xl" color="brand.500">
-            Welcome to AkauntAI
-          </Heading>
-          <Text color="gray.500" fontSize="lg">
-            AI-powered EBM receipt scanner for Rwandan accountants
-          </Text>
-          <Badge colorScheme="teal" fontSize="md" px={4} py={2} borderRadius="full">
-            ✅ Chakra UI is working
-          </Badge>
-        </VStack>
-      </Flex>
+      <Container maxW="1200px" py={8}>
+        <ReceiptUploader onExtracted={setExtractedData} />
+
+        {extractedData && (
+          <Box mt={8} maxW="700px" mx="auto" p={6} bg="white" borderRadius="lg" shadow="sm">
+            <Heading size="sm" mb={3}>
+              Extracted Data (raw):
+            </Heading>
+            <Code
+              p={4}
+              borderRadius="md"
+              display="block"
+              whiteSpace="pre-wrap"
+              fontSize="xs"
+              bg="gray.100"
+            >
+              {JSON.stringify(extractedData, null, 2)}
+            </Code>
+          </Box>
+        )}
+      </Container>
     </Box>
   )
 }
